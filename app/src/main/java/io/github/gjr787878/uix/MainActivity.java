@@ -108,10 +108,10 @@ public class MainActivity extends AppCompatActivity {
         }
         root.addView(nav, navParams);
 
-        // 导航栏磨砂渐变背景（带一点泛白）
+        // 导航栏磨砂渐变背景（上面更白，下面更透明）
         GradientDrawable navBg = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{0xD04A4A52, 0xB85A5A62}); // 顶部82%不透明泛白深灰 → 底部72%更泛白
+                new int[]{0xE85A5A62, 0x882C2C2E}); // 顶部91%不透明泛白 → 底部53%更透明
         navBg.setShape(GradientDrawable.RECTANGLE);
         navBg.setCornerRadius(28 * density);
         navBg.setStroke(Math.round(1 * density), 0x55FFFFFF); // 1dp淡白描边
