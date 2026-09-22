@@ -107,6 +107,15 @@ public class MainActivity extends AppCompatActivity {
             navParams.bottomMargin = 0;
         }
         root.addView(nav, navParams);
+
+        // 导航栏磨砂渐变背景（带一点泛白）
+        GradientDrawable navBg = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{0xD04A4A52, 0xB85A5A62}); // 顶部82%不透明泛白深灰 → 底部72%更泛白
+        navBg.setShape(GradientDrawable.RECTANGLE);
+        navBg.setCornerRadius(28 * density);
+        navBg.setStroke(Math.round(1 * density), 0x55FFFFFF); // 1dp淡白描边
+        nav.setBackground(navBg);
     }
 
     private void switchTab(int index) {
