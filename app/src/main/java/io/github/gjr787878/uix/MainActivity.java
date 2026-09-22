@@ -136,21 +136,18 @@ public class MainActivity extends AppCompatActivity {
         addSwitch("选项三", "opt3");
 
         // 4：弹窗选项（5 个子选项）
-        addSectionLabel("选项四（弹窗单选）");
-        addAction("btn4", sp.getString("opt4", "选项 A"), v -> showDialog4());
+        addAction("btn4", "选项四  ·  " + sp.getString("opt4", "选项 A"), v -> showDialog4());
 
         // 5：全屏二级界面
-        addSectionLabel("选项五（二级界面）");
-        addAction("btn5", "打开二级界面", v -> startActivity(new Intent(this, SubActivity.class)));
+        addAction("btn5", "选项五  ·  打开二级界面", v -> startActivity(new Intent(this, SubActivity.class)));
 
         // 6：三语言切换
-        addSectionLabel("选项六（语言）");
         String[] langs = {"中文", "English", "Русский"};
         int langIdx = sp.getInt("lang", 0);
-        addAction("btn6", langs[langIdx], v -> {
+        addAction("btn6", "选项六  ·  " + langs[langIdx], v -> {
             int next = (sp.getInt("lang", 0) + 1) % 3;
             sp.edit().putInt("lang", next).apply();
-            ((GlassCapsuleButton) v).setText(langs[next]);
+            ((GlassCapsuleButton) v).setText("选项六  ·  " + langs[next]);
             Toast.makeText(this, "语言: " + langs[next], Toast.LENGTH_SHORT).show();
         });
 
@@ -206,14 +203,12 @@ public class MainActivity extends AppCompatActivity {
         content.addView(seek);
 
         // 9：文本输入
-        addSectionLabel("选项九（文本输入）");
-        addAction("btn9", sp.getString("opt9", "点击输入文本"), v -> showInputDialog9());
+        addAction("btn9", "选项九  ·  " + (sp.getString("opt9", "").isEmpty() ? "点击输入文本" : sp.getString("opt9", "")), v -> showInputDialog9());
 
         // 10：颜色选择器
-        addSectionLabel("选项十（颜色选择）");
         String[] colors = {"蓝色", "绿色", "红色"};
         int colorIdx = sp.getInt("opt10", 0);
-        addAction("btn10", colors[colorIdx], v -> showColorDialog10(colors));
+        addAction("btn10", "选项十  ·  " + colors[colorIdx], v -> showColorDialog10(colors));
     }
 
     private void showDialog4() {
@@ -431,23 +426,28 @@ public class MainActivity extends AppCompatActivity {
         content.addView(tv);
     }
 
-    private GlassCapsuleButton addSwitch(String label, String key) {
-        addSectionLabel(label);
+    // 整行胶囊选项：左边标题，右边状态
+    private GlassCapsuleButton addOptionRow(String label, String value, View.OnClickListener listener) {
         GlassCapsuleButton btn = new GlassCapsuleButton(this);
-        boolean on = sp.getBoolean(key, false);
-        btn.setText(on ? "开" : "关");
-        btn.setGlassSelected(on);
-        btn.setOnClickListener(v -> {
-            boolean now = !sp.getBoolean(key, false);
-            sp.edit().putBoolean(key, now).apply();
-            ((GlassCapsuleButton) v).setText(now ? "开" : "关");
-            ((GlassCapsuleButton) v).setGlassSelected(now);
-        });
+        btn.setText(label + "  ·  " + value); // 标题 + 状态
+        btn.setOnClickListener(listener);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.bottomMargin = Math.round(12 * density);
         content.addView(btn, lp);
+        return btn;
+    }
+
+    private GlassCapsuleButton addSwitch(String label, String key) {
+        boolean on = sp.getBoolean(key, false);
+        GlassCapsuleButton btn = addOptionRow(label, on ? "开" : "关", v -> {
+            boolean now = !sp.getBoolean(key, false);
+            sp.edit().putBoolean(key, now).apply();
+            ((GlassCapsuleButton) v).setText(label + "  ·  " + (now ? "开" : "关"));
+            ((GlassCapsuleButton) v).setGlassSelected(now);
+        });
+        btn.setGlassSelected(on);
         return btn;
     }
 
