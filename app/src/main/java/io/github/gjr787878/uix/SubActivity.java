@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.gjr.glassbutton.GlassCapsuleButton;
 
 public class SubActivity extends AppCompatActivity {
     private SharedPreferences sp;
