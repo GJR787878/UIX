@@ -48,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
         Configuration config = getResources().getConfiguration();
         isTablet = config.smallestScreenWidthDp >= 600;
 
+        // 启用背景模糊（毛玻璃效果，Android 12+）
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            getWindow().setBackgroundBlurRadius(Math.round(40 * density));
+        }
+
         buildLayout();
         setupNav();
         switchTab(TAB1);
