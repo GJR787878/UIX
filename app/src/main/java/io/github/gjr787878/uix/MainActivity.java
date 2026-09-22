@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         // 导航栏磨砂渐变背景（上面更白，下面更透明）
         GradientDrawable navBg = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{0xE85A5A62, 0x882C2C2E}); // 顶部91%不透明泛白 → 底部53%更透明
+                new int[]{0xF06A6A72, 0x882C2C2E}); // 顶部94%不透明更白 → 底部53%更透明
         navBg.setShape(GradientDrawable.RECTANGLE);
         navBg.setCornerRadius(28 * density);
         navBg.setStroke(Math.round(1 * density), 0x55FFFFFF); // 1dp淡白描边
