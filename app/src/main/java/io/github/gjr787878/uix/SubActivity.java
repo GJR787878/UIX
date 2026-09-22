@@ -44,18 +44,26 @@ public class SubActivity extends AppCompatActivity {
         title.setPadding(0, 0, 0, Math.round(32 * density));
         root.addView(title);
 
-        // 三个子选项开关（整行胶囊）
+        // 三个子选项开关
         for (int i = 1; i <= 3; i++) {
             final int idx = i;
+            TextView label = new TextView(this);
+            label.setText("子选项" + idx);
+            label.setTextColor(0xFFCCCCCC);
+            label.setTextSize(14);
+            label.setPadding(0, Math.round(12 * density), 0, Math.round(8 * density));
+            root.addView(label);
+
             GlassCapsuleButton btn = new GlassCapsuleButton(this);
             boolean on = sp.getBoolean("sub_" + idx, false);
-            btn.setText("子选项" + idx + "  ·  " + (on ? "开" : "关"));
+            btn.setText(on ? "开" : "关");
             btn.setGlassSelected(on);
             btn.setOnClickListener(v -> {
                 boolean now = !sp.getBoolean("sub_" + idx, false);
                 sp.edit().putBoolean("sub_" + idx, now).apply();
-                ((GlassCapsuleButton) v).setText("子选项" + idx + "  ·  " + (now ? "开" : "关"));
+                ((GlassCapsuleButton) v).setText(now ? "开" : "关");
                 ((GlassCapsuleButton) v).setGlassSelected(now);
+                Toast.makeText(this, "子选项" + idx + ": " + (now ? "开" : "关"), Toast.LENGTH_SHORT).show();
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
