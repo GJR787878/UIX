@@ -212,42 +212,167 @@ public class MainActivity extends AppCompatActivity {
         String cur = sp.getString("opt4", "选项 A");
         int checked = 0;
         for (int i = 0; i < items.length; i++) if (items[i].equals(cur)) checked = i;
-        new AlertDialog.Builder(this)
-                .setTitle("第四个选项")
-                .setSingleChoiceItems(items, checked, (d, w) -> {
-                    sp.edit().putString("opt4", items[w]).apply();
-                    ((GlassCapsuleButton) content.findViewWithTag("btn4")).setText(items[w]);
-                    d.dismiss();
-                }).show();
+
+        // 自定义弹窗布局（深色 + 玻璃按钮）
+        LinearLayout dialogRoot = new LinearLayout(this);
+        dialogRoot.setOrientation(LinearLayout.VERTICAL);
+        int pad = Math.round(20 * density);
+        dialogRoot.setPadding(pad, Math.round(20 * density), pad, Math.round(16 * density));
+        dialogRoot.setBackgroundColor(0xFF1C1C1E);
+
+        android.widget.RadioGroup rg = new android.widget.RadioGroup(this);
+        rg.setOrientation(android.widget.RadioGroup.VERTICAL);
+        for (int i = 0; i < items.length; i++) {
+            android.widget.RadioButton rb = new android.widget.RadioButton(this);
+            rb.setText(items[i]);
+            rb.setTextColor(Color.WHITE);
+            rb.setId(800 + i);
+            rb.setChecked(i == checked);
+            rg.addView(rb);
+        }
+        dialogRoot.addView(rg);
+
+        // 两个并列玻璃胶囊按钮
+        LinearLayout btnRow = new LinearLayout(this);
+        btnRow.setOrientation(LinearLayout.HORIZONTAL);
+        btnRow.setPadding(0, Math.round(16 * density), 0, 0);
+
+        GlassCapsuleButton cancelBtn = new GlassCapsuleButton(this);
+        cancelBtn.setText("取消");
+        LinearLayout.LayoutParams cancelLp = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        cancelLp.rightMargin = Math.round(8 * density);
+        btnRow.addView(cancelBtn, cancelLp);
+
+        GlassCapsuleButton okBtn = new GlassCapsuleButton(this);
+        okBtn.setText("确定");
+        LinearLayout.LayoutParams okLp = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        okLp.leftMargin = Math.round(8 * density);
+        btnRow.addView(okBtn, okLp);
+
+        dialogRoot.addView(btnRow);
+
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogRoot)
+                .create();
+        dialog.show();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        okBtn.setOnClickListener(v -> {
+            int sel = rg.getCheckedRadioButtonId() - 800;
+            if (sel >= 0 && sel < items.length) {
+                sp.edit().putString("opt4", items[sel]).apply();
+                ((GlassCapsuleButton) content.findViewWithTag("btn4")).setText(items[sel]);
+            }
+            dialog.dismiss();
+        });
     }
 
     private void showInputDialog9() {
         EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(sp.getString("opt9", ""));
-        new AlertDialog.Builder(this)
-                .setTitle("输入文本")
-                .setView(input)
-                .setPositiveButton("确定", (d, w) -> {
-                    String text = input.getText().toString().trim();
-                    sp.edit().putString("opt9", text).apply();
-                    ((GlassCapsuleButton) content.findViewWithTag("btn9")).setText(text.isEmpty() ? "点击输入文本" : text);
-                })
-                .setNegativeButton("取消", null)
-                .show();
+        input.setTextColor(Color.WHITE);
+
+        LinearLayout dialogRoot = new LinearLayout(this);
+        dialogRoot.setOrientation(LinearLayout.VERTICAL);
+        int pad = Math.round(20 * density);
+        dialogRoot.setPadding(pad, Math.round(20 * density), pad, Math.round(16 * density));
+        dialogRoot.setBackgroundColor(0xFF1C1C1E);
+        dialogRoot.addView(input);
+
+        LinearLayout btnRow = new LinearLayout(this);
+        btnRow.setOrientation(LinearLayout.HORIZONTAL);
+        btnRow.setPadding(0, Math.round(16 * density), 0, 0);
+
+        GlassCapsuleButton cancelBtn = new GlassCapsuleButton(this);
+        cancelBtn.setText("取消");
+        LinearLayout.LayoutParams cancelLp = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        cancelLp.rightMargin = Math.round(8 * density);
+        btnRow.addView(cancelBtn, cancelLp);
+
+        GlassCapsuleButton okBtn = new GlassCapsuleButton(this);
+        okBtn.setText("确定");
+        LinearLayout.LayoutParams okLp = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        okLp.leftMargin = Math.round(8 * density);
+        btnRow.addView(okBtn, okLp);
+
+        dialogRoot.addView(btnRow);
+
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogRoot)
+                .create();
+        dialog.show();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        okBtn.setOnClickListener(v -> {
+            String text = input.getText().toString().trim();
+            sp.edit().putString("opt9", text).apply();
+            ((GlassCapsuleButton) content.findViewWithTag("btn9")).setText(text.isEmpty() ? "点击输入文本" : text);
+            dialog.dismiss();
+        });
     }
 
     private void showColorDialog10(String[] colors) {
         String cur = sp.getString("opt10", "蓝色");
         int checked = 0;
         for (int i = 0; i < colors.length; i++) if (colors[i].equals(cur)) checked = i;
-        new AlertDialog.Builder(this)
-                .setTitle("选择颜色")
-                .setSingleChoiceItems(colors, checked, (d, w) -> {
-                    sp.edit().putString("opt10", colors[w]).apply();
-                    ((GlassCapsuleButton) content.findViewWithTag("btn10")).setText(colors[w]);
-                    d.dismiss();
-                }).show();
+
+        LinearLayout dialogRoot = new LinearLayout(this);
+        dialogRoot.setOrientation(LinearLayout.VERTICAL);
+        int pad = Math.round(20 * density);
+        dialogRoot.setPadding(pad, Math.round(20 * density), pad, Math.round(16 * density));
+        dialogRoot.setBackgroundColor(0xFF1C1C1E);
+
+        android.widget.RadioGroup rg = new android.widget.RadioGroup(this);
+        rg.setOrientation(android.widget.RadioGroup.VERTICAL);
+        for (int i = 0; i < colors.length; i++) {
+            android.widget.RadioButton rb = new android.widget.RadioButton(this);
+            rb.setText(colors[i]);
+            rb.setTextColor(Color.WHITE);
+            rb.setId(900 + i);
+            rb.setChecked(i == checked);
+            rg.addView(rb);
+        }
+        dialogRoot.addView(rg);
+
+        LinearLayout btnRow = new LinearLayout(this);
+        btnRow.setOrientation(LinearLayout.HORIZONTAL);
+        btnRow.setPadding(0, Math.round(16 * density), 0, 0);
+
+        GlassCapsuleButton cancelBtn = new GlassCapsuleButton(this);
+        cancelBtn.setText("取消");
+        LinearLayout.LayoutParams cancelLp = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        cancelLp.rightMargin = Math.round(8 * density);
+        btnRow.addView(cancelBtn, cancelLp);
+
+        GlassCapsuleButton okBtn = new GlassCapsuleButton(this);
+        okBtn.setText("确定");
+        LinearLayout.LayoutParams okLp = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        okLp.leftMargin = Math.round(8 * density);
+        btnRow.addView(okBtn, okLp);
+
+        dialogRoot.addView(btnRow);
+
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogRoot)
+                .create();
+        dialog.show();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        okBtn.setOnClickListener(v -> {
+            int sel = rg.getCheckedRadioButtonId() - 900;
+            if (sel >= 0 && sel < colors.length) {
+                sp.edit().putString("opt10", colors[sel]).apply();
+                ((GlassCapsuleButton) content.findViewWithTag("btn10")).setText(colors[sel]);
+            }
+            dialog.dismiss();
+        });
     }
 
     // ==================== 导航二：22 个开关 ====================
